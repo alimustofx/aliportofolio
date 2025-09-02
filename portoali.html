@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ali Portofolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            position: relative;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-parallax {
+            background-image: url("https://drive.google.com/thumbnail?id=16fhvUaa5anRd-8eWCQTB-7H-IuCci4BW");
+            background-size: cover;
+            background-position: upper center;
+            background-attachment: fixed; 
+            position: relative;
+        }
+
+        .hero-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Custom CSS for the ID card and flip animation */
+        .id-card-container {
+            perspective: 1000px;
+        }
+        .id-card {
+            width: 320px;
+            height: 480px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            cursor: pointer;
+        }
+        .id-card.flipped {
+            transform: rotateY(180deg);
+        }
+        .id-card-front, .id-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            box-sizing: border-box;
+            background-color: #212121;
+        }
+        .id-card-back {
+            transform: rotateY(180deg);
+        }
+        .lanyard {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            width: 8px;
+            height: 60px;
+            background: #333;
+            border-radius: 4px;
+            transform: translateX(-50%);
+            z-index: -1;
+        }
+
+        /* Experience */
+        ul {
+        list-style: none; /* remove default bullets */
+        padding: 0;
+        margin: 0;
+        }
+
+        ul li {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 8px;
+        }
+
+        ul li::before {
+        content: "•"; /* custom bullet */
+        margin-right: 10px;
+        font-size: 1.2em;
+        line-height: 1.2;
+        }
+
+
+
+        /* Hero text animation */
+        .hero-text-fade-in {
+            animation: fadeIn 1.5s forwards;
+            opacity: 0;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Project Gallery and Modal Styles */
+        /* Changed from flex to grid for a responsive three-column layout */
+        .project-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            justify-items: center;
+            align-items: stretch;
+        }
+
+        /* Project card styles remain the same */
+        .project-card {
+            background: linear-gradient(145deg, #212121, #2d2d2d);
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.5s ease-in-out, box-shadow 0.3s ease-in-out;
+            width: 100%;
+        }
+
+        /* New glassmorphism overlay */
+        .project-card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(43, 43, 43, 0.4);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 1rem;
+        }
+        .project-card:hover .project-card-overlay {
+            opacity: 1;
+        }
+
+        /* Shine effect pseudo-element */
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: skewX(-20deg);
+            z-index: 2;
+        }
+        /* Hover state for shine effect and card lift */
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+        .project-card:hover::before {
+            animation: shine 1s forwards;
+        }
+        @keyframes shine {
+            to { left: 100%; }
+        }
+
+        /* Experience Card Hover Effect */
+        .experience-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: #212121;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease-in-out;
+        }
+        .modal-overlay.open .modal-content {
+            transform: translateY(0);
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #e0e0e0;
+            cursor: pointer;
+        }
+
+        /* New styles for upsized cards and smaller fonts */
+        .project-card-upsized {
+            width: 100%;
+        }
+        .project-card-upsized h3 {
+            font-size: 1.25rem; /* text-xl */
+        }
+        .project-card-upsized a {
+            font-size: 0.875rem; /* text-sm */
+            padding: 0.5rem 1rem;
+        }
+
+        /* Scroll-to-top button styling */
+        #scrollTopBtn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #3b82f6;
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 99;
+        }
+
+        #scrollTopBtn.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="bg-[#121212] text-[#e0e0e0]">
+
+    <!-- Hero Section -->
+    <header class="h-screen flex items-center justify-center text-center px-4 py-16 hero-parallax">
+        <!-- Overlay for readability -->
+        <div class="hero-overlay"></div>
+        <div class="relative z-10 space-y-6">
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight hero-text-fade-in" style="animation-delay: 0.5s;">
+                Halo, I'm <span class="text-[#3b82f6]">Ali Mustofa</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto hero-text-fade-in" style="animation-delay: 1s;">
+                A lifelong learner who codes for fun, loves the outdoors, and enjoys the quiet side of life.</p>
+            <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4 hero-text-fade-in" style="animation-delay: 1.5s;">
+                <a href="#projects" class="px-6 py-3 bg-[#3b82f6] text-white font-semibold rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 hover:bg-[#2563eb]">
+                    View My Work
+                </a>
+                <a href="#contact" class="px-6 py-3 bg-transparent text-[#3b82f6] font-semibold border-2 border-[#3b82f6] rounded-full transition-all duration-300 transform hover:bg-[#3b82f6] hover:text-white hover:scale-105">
+                    Get in Touch
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container px-4 py-16">
+
+        <!-- About Section -->
+        <section id="about" class="py-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">About Me</h2>
+            <div class="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-16">
+                <!-- Interactive ID Card with Lanyard -->
+                <div class="w-full md:w-1/3 flex justify-center relative id-card-container">
+                    <div class="lanyard"></div>
+                    <div id="id-card" class="id-card">
+                        <!-- Card Front -->
+                        <div class="id-card-front text-center">
+                            <img src="https://drive.google.com/thumbnail?id=1h8J2FNHD__8e4JdmieDj0bDKcgrutjZe&sz=w1000" alt="Profile Photo" class="rounded-full w-32 h-32 mb-4 object-cover border-4 border-[#3b82f6]">
+                            <h3 class="text-2xl font-bold text-[#e0e0e0]">Ali Mustofa</h3>
+                            <p class="text-md text-gray-400">Staff IT</p>
+                            <hr class="w-16 my-4 border-[#3b82f6]">
+                            <p class="text-sm text-gray-500">Tap to flip</p>
+                        </div>
+                        <!-- Card Back -->
+                        <div class="id-card-back text-center space-y-4">
+                            <div class="space-y-2">
+                                <h4 class="text-xl font-semibold">Contact Info</h4>
+                                <p class="text-sm text-gray-400">Email: alimustofx@gmail.com</p>
+                                <p class="text-sm text-gray-400">Location: Malang, Indonesia</p>
+                            </div>
+                            <div class="space-y-2">
+                                <h4 class="text-xl font-semibold">Skills</h4>
+                                <ul class="text-sm text-gray-400 space-y-1">
+                                    <li>Office, Mikrotik, Administration,</li>
+                                    <li>Networking, Front End,</li>
+                                    <li>Back End</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- About Me Text -->
+                <div class="w-full md:w-2/3 text-lg space-y-4 text-gray-300 text-justify">
+                    <p>Hey, I am just a human being who loves creating things on the web and enjoying life at my own pace. By day, I dive into office life doing things like administration stuff, networking stuff, sometimes coding, and handling the rest that comes my way.</p>
+                    <p>But outside the screen, I'm all about nature and balance like hiking up trails, watching the sky, or simply enjoying quiet moments with a book or a good movie. Music keeps me company (shoutout to Hindia, Perunggu, and Novo Amor), and of course coffee that keeps me grounded.</p>
+                    <p>I'm curious by nature, always open to learning new things, and I believe life isn't just about the hustle, it's about having fun, staying open minded, and creating space to grow.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="py-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Professional Experience</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Experience Card 1 -->
+                <div class="experience-card bg-[#212121] p-6 rounded-xl shadow-lg transition-transform duration-300 transform hover:scale-105 text-justify">
+                    <h3 class="text-2xl font-bold text-[#3b82f6]">Staff IT</h3>
+                    <p class="text-gray-400 text-lg mb-2">Public High School 1 Turen</p>
+                    <p class="text-gray-500 text-sm mb-4">Jan 2023 - Present</p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-300">
+                     <li>Handled administrative tasks including staffing reports in E-Master and Rumah ASN systems (employee performance targets, updating/synchronizing personal data, and salary adjustments), also managing student records.</li>  
+                     <li>Maintained school networking infrastructure such as Mikrotik, UniFi access points, and Wi-Fi configuration.</li>  
+                     <li>Managed server-side operations by troubleshooting and maintaining school applications including Dapodik, E-Rapor, and Exam App.</li>  
+                     <li>Coordinated the Computer Laboratory, overseeing setup and maintenance of computers while managing and guiding laboratory staff.</li>  
+                     <li>Operated ARKAS application for accurate government financial reporting and school fund management.</li>  
+                    </ul>
+                </div>
+                <!-- Experience Card 2 -->
+                <div class="experience-card bg-[#212121] p-6 rounded-xl shadow-lg transition-transform duration-300 transform hover:scale-105 text-justify">
+                    <h3 class="text-2xl font-bold text-[#3b82f6]">Staff IT</h3>
+                    <p class="text-gray-400 text-lg mb-2">Public Elementary School 1 Putat Lor</p>
+                    <p class="text-gray-500 text-sm mb-4">Jan 2022 - Dec 2022</p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-300">
+                     <li>Managed and updated student and teacher data using Dapodik (Data Pokok Pendidikan) system.</li>
+                     <li>Operated ARKAS application for government financial reporting and school fund management.</li>
+                     <li>Maintained school networking infrastructure and served as proctor during online examinations.</li>
+                     <li>Substituted for teachers by conducting lessons when needed.</li>                
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">My Projects</h2>
+            <!-- The new gallery container -->
+            <div id="project-gallery" class="project-gallery">
+                <!-- Project cards will be injected here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8">Get in Touch</h2>
+            <p class="text-lg text-gray-400 mb-8">
+                I'm always open to new opportunities. Feel free to reach out to me via email or social media.
+            </p>
+            <div class="flex items-center justify-center space-x-6 text-2xl">
+                <a href="mailto:alimustofx@gmail.com" class="text-gray-400 hover:text-[#3b82f6] transition-colors duration-300" aria-label="Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+                <a href="https://www.instagram.com/alimustofx/" class="text-gray-400 hover:text-[#3b82f6] transition-colors duration-300" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://github.com/alimustofx" class="text-gray-400 hover:text-[#3b82f6] transition-colors duration-300" aria-label="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://x.com/alimstfx" class="text-gray-400 hover:text-[#3b82f6] transition-colors duration-300" aria-label="Twitter">
+                    <i class="fa-brands fa-x-twitter"></i>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Project Modal Pop-up -->
+    <div id="project-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="modal-close" class="modal-close"><i class="fas fa-times"></i></button>
+            <div class="space-y-4">
+                <img id="modal-image" src="" alt="Project Image" class="rounded-lg w-full mb-4">
+                <h3 id="modal-title" class="text-2xl font-bold text-[#3b82f6]"></h3>
+                <p id="modal-description" class="text-gray-400 text-base"></p>
+                <div id="modal-links" class="flex flex-wrap gap-4 pt-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll-to-top button -->
+    <button id="scrollTopBtn" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Footer -->
+    <footer class="bg-[#212121] text-gray-500 py-8 text-center">
+        <p>&copy; 2024 Ali Mustofa. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Data for the projects, including details for the modal
+        // To delete a project, simply remove its entire object (from {id: ..., to the closing },) from this array.
+        const projects = [
+            {
+                id: 0,
+                title: "Profile Website",
+                description: "A sleek and modern personal profile website built with HTML, CSS, and JavaScript. It features a responsive design, smooth animations, and a clean layout to showcase information.",
+                image: "https://drive.google.com/thumbnail?id=11fVosUucmLnlS9DxWGc3Kn3yevCG7sH1&sz=w2000",
+                tags: ["HTML", "CSS", "JavaScript"],
+                links: [
+                    { name: "Live Demo", url: "https://alimustofx.github.io/permanacabe.org/" },
+                    { name: "GitHub", url: "https://github.com/alimustofx/permanacabe.org" }
+                ]
+            },
+            {
+                id: 2,
+                title: "Online Store Website", 
+                description: "A modern and responsive online store website built with HTML, CSS, and JavaScript. It includes features like product listings, profile pages, and a contact person.",
+                image: "https://drive.google.com/thumbnail?id=1tp8JHh98JTi_Cwl47ObrDwOYSG9LzxHz&sz=w2000",
+                tags: ["HTML", "CSS", "JavaScript"],
+                links: [
+                    { name: "Live Demo", url: "https://alimustofx.github.io/krys.org/" },
+                    { name: "GitHub", url: "https://github.com/alimustofx/krys.org" }
+                ]
+            },
+            {
+                id: 3,
+                title: "Find School Photo Online",  
+                description: "A web application that allows users to search and view school photos online. Built with HTML, CSS, and JavaScript, it features a user-friendly interface and efficient search functionality.",
+                image: "https://drive.google.com/thumbnail?id=1UxPGC6PPOeFLZ8-8qnviLIXhcgwDPORJ&sz=w2000",
+                tags: ["JavaScript", "CSS", "HTML"],
+                links: [
+                    { name: "Live Demo", url: "https://alimustofx.github.io/fotosiswasmanere/" },
+                    { name: "GitHub", url: "https://github.com/alimustofx/fotosiswasmanere" }
+                ]
+            },
+            {
+                id: 4,
+                title: "Announcement Graduation Website",
+                description: "A simple and elegant website for announcing graduation results. Built with HTML, CSS, and JavaScript, it provides a clean interface for users to check their results also have ChatBOT.",
+                image: "https://drive.google.com/thumbnail?id=1E41SuTihXdb7j18YnLUXFt1NIjNf0DZ0&sz=w2000",
+                tags: ["HTML", "CSS", "JavaScript"],
+                links: [
+                    { name: "Live Demo", url: "https://alimustofx.github.io/kelulusansmanere/" },
+                    { name: "GitHub", url: "https://github.com/alimustofx/kelulusansmanere" }
+                ]
+            },
+            {
+                id: 5,
+                title: "Result Student Diagnostic Website",
+                description: "A web application for diagnosing student results. Built with HTML, CSS, and JavaScript, it offers a user-friendly interface for download their diagnostic results.",
+                image: "https://drive.google.com/thumbnail?id=1JfnDmSSJ4587re661_xgNvVJ-VtLReo1&sz=w2000",
+                tags: ["HTML", "CSS", "JavaScript"],
+                links: [
+                    { name: "Live Demo", url: "https://alimustofx.github.io/hasilSDATSMAN1Turen/" },
+                    { name: "GitHub", url: "https://github.com/alimustofx/hasilSDATSMAN1Turen/" }
+                ]
+            },
+
+        ];
+
+
+        // JavaScript to handle the ID card flip
+        const idCard = document.getElementById('id-card');
+        function toggleFlip() {
+            idCard.classList.toggle('flipped');
+        }
+        idCard.addEventListener('click', toggleFlip);
+        idCard.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            toggleFlip();
+        });
+
+        // Get elements for the modal
+        const modalOverlay = document.getElementById('project-modal');
+        const modalCloseBtn = document.getElementById('modal-close');
+        const modalTitle = document.getElementById('modal-title');
+        const modalImage = document.getElementById('modal-image');
+        const modalDescription = document.getElementById('modal-description');
+        const modalLinks = document.getElementById('modal-links');
+
+        // Function to open the modal with project data
+        function openModal(projectId) {
+            const project = projects.find(p => p.id == projectId);
+            if (!project) return;
+
+            modalTitle.textContent = project.title;
+            modalImage.src = project.image;
+            modalDescription.textContent = project.description;
+
+            // Clear previous links
+            modalLinks.innerHTML = '';
+            project.links.forEach(link => {
+                const linkElem = document.createElement('a');
+                linkElem.href = link.url;
+                linkElem.textContent = link.name;
+                linkElem.target = "_blank"; // Open in a new tab
+                linkElem.classList.add("px-4", "py-2", "bg-[#3b82f6]", "text-white", "font-semibold", "rounded-full", "transition-all", "duration-300", "transform", "hover:scale-105", "hover:bg-[#2563eb]");
+                modalLinks.appendChild(linkElem);
+            });
+
+            modalOverlay.classList.add('open');
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            modalOverlay.classList.remove('open');
+        }
+
+        // Event listeners for opening and closing the modal
+        document.addEventListener('DOMContentLoaded', () => {
+            const gallery = document.getElementById('project-gallery');
+            const projectCardsData = projects;
+
+            // Create and append the project cards dynamically
+            projectCardsData.forEach(project => {
+                const card = document.createElement('div');
+                card.classList.add('project-card', 'project-card-upsized', 'p-4', 'rounded-xl', 'shadow-lg');
+                card.dataset.projectId = project.id;
+
+                // Set the rotation to make it look less like a rigid grid
+                const randomRotation = Math.random() * 6 - 3; // -3 to 3 degrees
+                card.style.transform = `rotate(${randomRotation}deg)`;
+
+                // Create the inner card structure with image, tags, and overlay
+                const tagsHtml = `
+                <div class="flex flex-wrap gap-2 mt-2">
+                    ${project.tags
+                    .map(
+                        tag => `
+                        <span class="px-3 py-1 text-xs font-medium rounded-md
+                                text-white bg-transparent
+                                flex items-center justify-center
+                                hover:bg-white hover:text-black transition">
+                        ${tag}
+                        </span>`
+                    )
+                    .join('')}
+                </div>
+                `;
+
+
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <img src="${project.image}" alt="${project.title}" class="rounded-lg w-full">
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            ${tagsHtml}
+                        </div>
+                    </div>
+                    <div class="project-card-overlay rounded-xl">
+                        <h3 class="text-xl font-bold text-white mb-4">${project.title}</h3>
+                        <a href="#" class="px-4 py-2 bg-[#3b82f6] text-white font-semibold rounded-full hover:bg-[#2563eb] transition-colors duration-300">View Details</a>
+                    </div>
+                `;
+
+                // Add event listener to the card itself, not just the overlay
+                card.addEventListener('click', (e) => {
+                    const projectId = e.currentTarget.dataset.projectId;
+                    openModal(projectId);
+                });
+
+                gallery.appendChild(card);
+            });
+
+            modalCloseBtn.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+
+            // Scroll-to-top button logic
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            const showBtnOnScroll = 200; // Show the button after scrolling this many pixels
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > showBtnOnScroll) {
+                    scrollTopBtn.classList.add('show');
+                } else {
+                    scrollTopBtn.classList.remove('show');
+                }
+            });
+
+            scrollTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Initialize ScrollReveal for animations
+            ScrollReveal().reveal('#about', {
+                delay: 200,
+                distance: '30px',
+                origin: 'bottom',
+                easing: 'cubic-bezier(0.68, -0.55, 0.27, 1.55)',
+                duration: 800
+            });
+            ScrollReveal().reveal('.experience-card', {
+                delay: 200,
+                distance: '30px',
+                origin: 'bottom',
+                interval: 100,
+                easing: 'cubic-bezier(0.68, -0.55, 0.27, 1.55)',
+                duration: 800
+            });
+            ScrollReveal().reveal('#projects', {
+                delay: 200,
+                distance: '30px',
+                origin: 'bottom',
+                easing: 'cubic-bezier(0.68, -0.55, 0.27, 1.55)',
+                duration: 800
+            });
+            ScrollReveal().reveal('#contact', {
+                delay: 200,
+                distance: '30px',
+                origin: 'bottom',
+                easing: 'cubic-bezier(0.68, -0.55, 0.27, 1.55)',
+                duration: 800
+            });
+        });
+
+    </script>
+</body>
+</html>
